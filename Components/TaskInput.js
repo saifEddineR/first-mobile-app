@@ -1,43 +1,40 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
-import { styles } from '../styles/taskStyle';
+import { View, TextInput, Button, StyleSheet, Modal } from 'react-native';
 
-const TaskInput = () => {
-  const [input, setInput] = useState();
-  const [todoList, setTodoList] = useState([]);
-  const inputText = (e) => {
-    setInput(e);
+const GoalInput = (props) => {
+  const [enteredGoal, setEnteredGoal] = useState('');
+
+  const goalInputHandler = (enteredText) => {
+    setEnteredGoal(enteredText);
   };
-  const handleInput = () => {
-    setTodoList((currentState) => [
-      ...todoList,
-      { key: Math.random().toString(), value: input },
-    ]);
-    setInput('');
-  };
+
   return (
-    <View>
-      <View
-        style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}
-      >
+    <Modal visible={props.visible} animationType='slide'>
+      <View style={styles.inputContainer}>
         <TextInput
-          placeholder='input username'
-          value={input}
-          onChangeText={inputText}
-          style={{ borderBottomColor: 'black', borderWidth: 1, height: 40, width: '50%' }}
+          placeholder='Course Goal'
+          style={styles.input}
+          onChangeText={goalInputHandler}
+          value={enteredGoal}
         />
-        <Button title='click' onPress={handleInput} />
+        <Button title='ADD' onPress={props.onAddGoal.bind(this, enteredGoal)} />
       </View>
-      <FlatList
-        data={todoList}
-        renderItem={(itemData) => (
-          <View style={styles.todo}>
-            <Text style={styles.textTask}>{itemData.item} </Text>
-          </View>
-        )}
-      />
-    </View>
+    </Modal>
   );
 };
 
-export default TaskInput;
+const styles = StyleSheet.create({
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  input: {
+    width: '80%',
+    borderColor: 'black',
+    borderWidth: 1,
+    padding: 10,
+  },
+});
+
+export default GoalInput;
