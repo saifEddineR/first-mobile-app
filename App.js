@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Button, FlatList } from 'react-native';
 
-import TaskList from './Components/TaskList';
+import TaskCard from './Components/TaskCard';
 import TaskInput from './Components/TaskInput';
 
 export default function App() {
@@ -13,6 +13,7 @@ export default function App() {
       ...currentGoals,
       { id: Math.random().toString(), value: goalTitle },
     ]);
+    setIsAddMode(false);
   };
 
   const removeGoalHandler = (goalId) => {
@@ -20,16 +21,20 @@ export default function App() {
       return currentGoals.filter((goal) => goal.id !== goalId);
     });
   };
+  const handleCancelModal = () => {
+    setIsAddMode(false)
+  }
+  
 
   return (
     <View style={styles.screen}>
       <Button title='Add New Goal' onPress={() => setIsAddMode(true)} />
-      <TaskInput visible={isAddMode} onAddGoal={addGoalHandler} />
+      <TaskInput visible={isAddMode} onAddGoal={addGoalHandler} onCancel={handleCancelModal} />
       <FlatList
         keyExtractor={(item, index) => item.id}
         data={courseGoals}
         renderItem={(itemData) => (
-          <TaskList
+          <TaskCard
             id={itemData.item.id}
             onDelete={removeGoalHandler}
             title={itemData.item.value}
